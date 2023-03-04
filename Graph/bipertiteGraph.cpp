@@ -23,11 +23,11 @@ bool isBip(int src) {
             } 
             else {
                 if (color[u] == color[v]) {
-                    return true;
+                    return false;
                 }
             }
         }
     }
  
-    return false;
+    return true;
 }
