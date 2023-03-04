@@ -5,7 +5,7 @@ typedef long long ll;
  
 const int N = 2e5 + 5;
 
-int n, m, par[N];
+int n, m;
 bool vis[N];
 vector<int> g[N]; 
 
@@ -13,7 +13,7 @@ void BFS(int x) {
     queue<int> q;
     q.push(x);
     vis[x] = true;
-    par[x] = -1;
+
     while(q.size()) {
         int u = q.front();
         q.pop();
@@ -21,19 +21,9 @@ void BFS(int x) {
             if(!vis[child]) {
                 q.push(child);
                 vis[child] = true;
-                par[child] = u;
             }
-            if(child == n) return; 
         }
     }
-}
- 
-
-void shortestPath(int x, int sz) {
-    if(par[x] != -1) shortestPath(par[x], sz + 1);
-    else cout << sz << '\n';
- 
-    cout << x << ' ';
 }
  
 int main() {
@@ -48,8 +38,4 @@ int main() {
     }
  
     BFS(1);
-    if(!vis[n]) {
-        return cout << "IMPOSSIBLE", 0;
-    }
-    shortestPath(n, 1);
 }

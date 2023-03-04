@@ -1,6 +1,7 @@
-#include <iostream>
-#include <vector>
+#include "bits/stdc++.h"
+ 
 using namespace std;
+typedef long long ll;
 
 int n, a[16];
 vector<vector<int>> ans;
@@ -19,17 +20,5 @@ void rec(int i) {
 }
 
 int main() {
-    cin >> n;
-    n *= 2;
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-
-    rec(0);
-    for (auto v : ans) {
-        for (auto x : v) {
-            cout << x << ' ';
-        }
-        cout << '\n';
-    }
+    return 0;
 }
