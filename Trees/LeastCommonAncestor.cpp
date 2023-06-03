@@ -1,69 +1,64 @@
-#include "bits/stdc++.h"
+class LCA {
+    int n, lg;
+    vector<int> depth;
+    vector<vector<int>> up;
+    
+    void fill(int v, int p, const vector<vector<int>> &g) {
+        for (auto u: g[v]) {
+            if (u == p) continue;
+            depth[u] = depth[v] + 1;
+            up[u][0] = v;
+            for (int i = 1; i < lg; i++) {
+                up[u][i] = up[up[u][i - 1]][i - 1];
+            }
+            fill(u, v, g);
+        }
+    }
  
-using namespace std;
-typedef long long ll;
-
-const int N = 3e5 + 5;
-const int LOG = 19;
-
-vector<int> g[N];
-int up[N][LOG], depth[N];
-
-void fill(int v, int p) {
-    for (auto u : g[v]) {
-        if (u == p) continue;
-        depth[u] = depth[v] + 1;
-        up[u][0] = v;
-        for (int bit = 1; bit < LOG; bit++) {
-            up[u][bit] = up[up[u][bit - 1]][bit - 1];
+public:
+    LCA(const vector<vector<int>> &g, int root = 0) {
+        n = g.size();
+        lg = log2(n) + 1;
+        depth.resize(n);
+        up.resize(n, vector<int> (lg));
+        fill(root, -1, g);
+    }
+ 
+    int getKth(int v, int k) {
+        for (int i = lg - 1; i >= 0; i--) {
+            if (k & (1 << i)) {
+                v = up[v][i];
+            }
         }
-        fill(u, v);
+        return v;
     }
-}
-
-int getKth(int v, int k) {
-    for (int bit = LOG - 1; bit >= 0; bit--) {
-        if (k & (1 << bit)) v = up[v][bit];
-    }
-    return v;
-}
-
-int getLCA(int a, int b) {
-    if (depth[a] < depth[b]) swap(a, b);
-
-    a = getKth(a, depth[b] - depth[a]);
-    if (a == b) return a;
-
-    for (int bit = LOG - 1; bit >= 0; bit--) {
-        if (up[a][bit] != up[b][bit]) {
-            a = up[a][bit];
-            b = up[b][bit];
+ 
+    int getLCA(int v, int u) {
+        if (depth[v] > depth[u]) {
+            swap(v, u);
         }
+        u = getKth(u, depth[u] - depth[v]);
+        if (u == v) {
+            return v;
+        }
+        for (int i = lg - 1; i >= 0; i--) {
+            if (up[v][i] != up[u][i]) {
+                v = up[v][i];
+                u = up[u][i];
+            }
+        }
+        return up[v][0];
     }
-
-    return up[a][0];
-}
-
-int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int n;
-    cin >> n;
-    for (int i = 0; i < n - 1; i++) {
-        int a, b;
-        cin >> a >> b;  
-        g[a].push_back(b);
-        g[b].push_back(a);
+ 
+    int getDistance(int v, int u) {
+        return depth[v] + depth[u] - 2 * depth[getLCA(v, u)];
     }
-
-    fill(1, -1);
-
-    int q;
-    cin >> q;
-    while (q--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        int lca = getLCA(a, b);
-        cout << lca << '\n';
+ 
+    int getDepth(int v) {
+        return depth[v];
     }
-}
+ 
+    int parent(int v) {
+        return up[v][0];
+    }
+};
