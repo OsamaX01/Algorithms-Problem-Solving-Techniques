@@ -11,6 +11,10 @@ int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
 int n, m;
 vector<vector<int>> adj;
 
+bool getType() {
+    return true; 
+}
+
 void solve(int src) {
     deque<int> q;
     vector<int> cost(n, INF);
@@ -28,7 +32,7 @@ void solve(int src) {
 
         for (auto u : adj[v]) {
             if (vis[u]) continue;
-            bool one = (u == v + 1); // some condition
+            bool one = getType(v); // some condition related to parent vertix
             int cur = cost[v] + one; 
             cost[u] = min(cost[u], cur);
             (one ? q.push_back(u) : q.push_front(u));
